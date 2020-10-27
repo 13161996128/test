@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>后台-文章列表</title>
+</head>
+
+<link rel="stylesheet" href="/public/css/adminStyle.css"> 
+<link rel="stylesheet" type="text/css" href="/public/css/page.css"/>
+<link rel="stylesheet" type="text/css" href="/public/css/layui.css"/>
+<script type="text/javascript" src="/public/js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="/public/js/layer/layer.js"></script> 
+<script src="/public/js/layer/layui.js"></script>
+
+<style>
+    .layui-btn{
+        margin-right: 30px;
+    }
+    .layui-form-checkbox{
+        margin-right:5px!important;
+        margin-top: -4px!important;
+    }
+    .layui-form-select .layui-edge{
+        top:16px;
+    }
+    .layui-form-selected dl {
+        top: 32px;
+        bottom: auto;
+    }
+</style>
+<body>
+
+
+<div class="right">
+	<div class="meau22">
+    	<div class="xt_title">后台管理</div>
+        <div class="top-link">
+            <a href="#" target="mainCont" title="DeathGhost">
+                <i class="adminIcon"><img src="/public/images/user_01.png"></i><span><b>你好,{$uname}</b>欢迎使用管理系统</span></a>
+              <a href="/admin/login/logout" class="tuichu" title="退出"><img src="/public/images/tuichu.gif"></a>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div class="main1">
+		{include file="layer/top"}
+
+        <div class="clear"></div>
+
+        <div class="biaodan">
+            <button class="layui-btn" style="background-color: #0099cc;" id="get_all">批量获取</button>
+             <button class="layui-btn" style="background-color: #0099cc;" id="del_all">批量删除</button>
+
+    		<form action="" method="post" id="searchform">   
+    			<div class="bd layui-form">
+                    <span style="width: 100px;">文章标题</span> 
+                    <input name="title" type="text" id="title" value="<?= !empty($title) ? $title : '';?>"    />
+
+                    <div class="layui-col-md2" style="position: relative;">
+                        <span  layui-col-md4>文章分类：</span> 
+                        <div style="width: 135px; float: left;">
+                            <select name="cate_id" lay-verify=""  class="layui-col-md4">
+                                <option value="" <?= $cate_id == '' ? 'selected' : '' ?> >请选择</option>
+                                {foreach name="cateList" item="vo"}
+                                    <option value="{$vo.id}" <?= $cate_id == $vo['id'] ? 'selected' : '' ?> >{$vo.cate_name}</option>
+                                {/foreach}
+                            </select> 
+                        </div>
+
+                    </div>
+                    <div class="layui-col-md2" style="position: relative;">
+                        <span  layui-col-md4>每页展示：</span> 
+                        <div style="width: 135px; float: left;">
+                            <select name="page_size" lay-verify=""  class="layui-col-md4">
+                                <option value="10" <?= $page_size == 10 ? 'selected' : '' ?> >10</option>
+                                <option value="20" <?= $page_size == 20 ? 'selected' : '' ?> >20</option>
+                                <option value="50" <?= $page_size == 50 ? 'selected' : '' ?> >50</option>
+                            </select> 
+                        </div>
+
+                    </div>
+
+                    <span><input name="" type="submit" value="搜索" onClick="sousuo()" class="ssbut"/>
+                    </span>
+
+    				<input type="hidden" name="type" value="3" > 
+    				
+    			</div>
+            </form>
+
+        </div>
+
+
+        <div class="clear"></div>
+        <div class="biaoge layui-form">
+        	<table width="100%" border="1" cellspacing="0" cellpadding="0">
+        	<tr class="ddbg">
+        	    <td height="45" align="center" valign="middle"><input type="checkbox" id="all" name="" lay-filter="all" lay-skin="primary">ID</td>
+        	    <td height="45" align="center" valign="middle">文章标题</td>
+                <td height="45" align="center" valign="middle">文章分类</td>
+                <td height="45" align="center" valign="middle">是否有内容</td>
+                <td height="45" align="center" valign="middle">文章长度</td>
+                <td height="45" align="center" valign="middle">排序号</td>
+        	    <td height="45" align="center" valign="middle">操作</td>
+      	    </tr>
+			{foreach name="list" item="vo"}
+                <tr>
+                    <td height="50" width="80" align="center" valign="middle">
+
+                        {if condition="( empty($vo.content) )"}
+                            <input type="checkbox" class="checkbox19871" name="del" e_id="{$vo.id}" lay-skin="primary">
+                        {/if}
+                        {if condition="( $vo.content )"}
+                            <input type="checkbox" class="checkbox19871" name="del" e_id="{$vo.id}" lay-skin="primary">
+                            <!--<div class="kuang"></div>-->
+                        {/if}
+                        {$vo.id}
+                    </td>
+                    <td height="50" align="center" valign="middle">{$vo.title}</td>
+                    <td height="50" align="center" valign="middle">{$vo.cate_name}</td>
+                    <td height="50" align="center" valign="middle">
+                        {$vo['content'] ? '有' : '没有'}
+                    </td>
+                    <td height="50" align="center" valign="middle">
+                        <?=strlen($vo['content'])?>
+                    </td>
+                    <td height="50" align="center" valign="middle">
+                        {$vo.order}
+                    </td>
+                    <td height="50" align="center" valign="middle">
+                        {if condition="( $vo.content )"}
+                        <a href="/Index/index/getInfo?id={$vo.id}" target="_blank"><button class="layui-btn layui-btn-normal" >查看文章</button></a>
+                        {/if}
+                        {if condition="( empty($vo.content) )"}
+                            <button class="layui-btn layui-btn-danger" onclick="getInfoUrl({$vo.id})" >获取文章</button>
+                        {/if}
+                        <button class="layui-btn layui-btn-normal" onclick="location.href='/Admin/index/editArticle?id={$vo.id}'" >编辑</button>
+                        <button class="layui-btn layui-btn-danger" onclick="del({$vo.id})" >删除</button>
+                        {if condition="( $vo.isjingpin==0 )"}
+                           <button class="layui-btn layui-btn-normal" onclick="jingpin({$vo.id})" >设为精品</button>
+                        {/if}
+                    </td>
+                </tr>
+			{/foreach}
+      	  </table>
+        </div>
+        <div class="clear"></div>
+        <div class="bg_fenye">
+        <div style="float: left;">
+        	<?php if($count){ ?>
+		    共查询到 {$count} 条记录，当前第 {$list->currentPage}/{$list->lastPage} 页
+		    <?php } ?>
+		</div>
+        <div>{$page}</div>
+        </div>
+        <div class="clear"></div>
+       
+    </div>
+    <div class="banquan">CopyRight 2014-2018  有限公司版权所有</div>
+</div>
+
+<script>
+    $(".haimeizuo").click(function () {
+        layer.msg("程序员太懒，还没做");
+    })
+
+</script>
+<script>
+    function del(id){
+        layer.confirm('确认删除这篇文章？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            $.ajax({
+                type: "POST",
+                url: "/Admin/index/delArticle",
+                data: {
+                    'id'    :id,
+                },
+                success: function(msg){
+                    if (msg.code==1) {
+                        layer.msg('已删除', {
+                            icon: 1,
+                            time: 600 //2秒关闭（如果不配置，默认是3秒）
+                        }, function(){
+                            location.reload();
+                        });
+                    }else{
+                        layer.msg("删除失败！",{
+                        icon: 2,
+                        time: 600 //2秒关闭（如果不配置，默认是3秒）
+                        })
+                    }
+                }
+            });
+        })
+    }
+
+    function jingpin(id){
+        layer.confirm('确认设为精品？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            $.ajax({
+                type: "POST",
+                url: "/Admin/index/jingpinArticle",
+                data: {
+                    'id'    :id,
+                },
+                success: function(msg){
+                    if (msg.code==1) {
+                        layer.msg('成功', {
+                            icon: 1,
+                            time: 600 //2秒关闭（如果不配置，默认是3秒）
+                        }, function(){
+                            location.reload();
+                        });
+                    }else{
+                        layer.msg("失败！",{
+                            icon: 2,
+                            time: 600 //2秒关闭（如果不配置，默认是3秒）
+                        })
+                    }
+                }
+            });
+        })
+    }
+    function getInfoUrl(id){
+        //loading层
+        var index = layer.load(1, {
+          shade: [0.1,'#fff'] //0.1透明度的白色背景
+        });
+        $.ajax({
+           type: "POST",
+           url: "/Admin/index/getInfoUrl",
+           dataType:'json',
+           data: {
+                'id'    :id,
+           },
+            success: function(msg){
+                layer.close(index); 
+                if (msg==1) {
+                    layer.msg('获取成功！', {
+                      icon: 1,
+                      time: 600 //2秒关闭（如果不配置，默认是3秒）
+                    }, function(){
+                      location.reload();
+                    }); 
+
+                }else{
+                    layer.msg("获取失败！",{
+                      icon: 2,
+                      time: 600 //2秒关闭（如果不配置，默认是3秒）
+                    })
+                }
+            }
+        }); 
+    }
+
+    //Demo
+    layui.use('form', function(){
+        var form = layui.form;
+        //全选反选
+        form.on('checkbox(all)', function(data){  
+            var ch = document.getElementsByClassName("checkbox19871");  
+            var checked=$('#all').next().attr('class');
+
+            for (var i = 0; i < ch.length; i++) {  
+                if (data.elem.checked == true)  
+                    ch[i].checked = true;  
+                else  
+                    ch[i].checked = false;  
+            }  
+
+            var ch = document.getElementsByClassName("layui-unselect layui-form-checkbox");  
+
+            for (var i = 0; i < ch.length; i++) {  
+                if (checked == "layui-unselect layui-form-checkbox layui-form-checked") { 
+                    ch[i].className = "layui-unselect layui-form-checkbox layui-form-checked";  
+                }  
+                else {  
+                    ch[i].className = "layui-unselect layui-form-checkbox";  
+                }  
+  
+            }  
+  
+            return false;  
+        });    
+    });
+    $('#del_all').click(function(){
+        var del=[];
+        id = $("input:checkbox[name=del]:checked").map(function(index,elem) {
+            return $(elem).attr('e_id');
+        }).get().join(',');
+        if (id.length==0) {
+            layer.open({
+                title: '提示',
+                content: '请选择数据',
+                offset: ['40%', '40%'],
+                time : 2000,
+                area: ['300px', '160px']
+            });
+        }else{
+            layer.confirm('确认批量删除这些文章吗？', {
+                btn: ['确定','取消'] //按钮
+            },function(){
+                //loading层
+                var index_1 = layer.load(1, {
+                    shade: [0.1,'#fff'] //0.1透明度的白色背景
+                });
+                $.ajax({
+                    type: "POST",
+                    url: "/Admin/index/delArticle",
+                    data: {
+                        'id'    :id,
+                    },
+                    success: function(msg){
+                        layer.close(index_1);
+                        if (msg.code==1) {
+                            layer.msg('删除成功！', {
+                                icon: 1,
+                                time: 600 //2秒关闭（如果不配置，默认是3秒）
+                            }, function(){
+                                location.reload();
+                            });
+                            /*layer.open({
+                              title: '提示',
+                              content: '设置成功！',
+                              offset: ['35%', '40%'],
+                              area: ['auto', '160px']
+                            });*/
+                        }else{
+                            layer.msg("删除失败！",{
+                                icon: 2,
+                                time: 600 //2秒关闭（如果不配置，默认是3秒）
+                            })
+                        }
+                    }
+                });
+                layer.close(index);
+            })
+        }
+    }) ;
+    $('#get_all').click(function(){
+        var del=[];
+        id = $("input:checkbox[name=del]:checked").map(function(index,elem) {
+            return $(elem).attr('e_id');
+        }).get().join(',');
+        if (id.length==0) {
+            layer.open({
+                title: '提示',
+                content: '请选择数据',
+                offset: ['40%', '40%'],
+                time : 2000,
+                area: ['300px', '160px']
+            });
+        }else{
+            //loading层
+            var index_1 = layer.load(1, {
+                shade: [0.1,'#fff'] //0.1透明度的白色背景
+            });
+            $.ajax({
+                type: "POST",
+                url: "/Admin/index/getInfoUrl",
+                dataType:'json',
+                data: {
+                    'id'    :id,
+                },
+                success: function(msg){
+                    layer.close(index_1);
+                    if (msg==1) {
+                        layer.msg('获取成功！', {
+                            icon: 1,
+                            time: 600 //2秒关闭（如果不配置，默认是3秒）
+                        }, function(){
+                            location.reload();
+                        });
+                        /*layer.open({
+                          title: '提示',
+                          content: '设置成功！',
+                          offset: ['35%', '40%'],
+                          area: ['auto', '160px']
+                        });*/
+                    }else{
+                        layer.msg("获取失败！",{
+                            icon: 2,
+                            time: 600 //2秒关闭（如果不配置，默认是3秒）
+                        })
+                    }
+                }
+            });
+            layer.close(index);
+        }
+    }) ;
+    function sousuo(){
+        //alert(1)
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>后台-文章修改</title>
+</head>
+
+<link rel="stylesheet" href="/public/css/adminStyle.css"> 
+<link rel="stylesheet" type="text/css" href="/public/css/page.css"/>
+<link rel="stylesheet" type="text/css" href="/public/css/layui.css"/>
+<script type="text/javascript" src="/public/js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="/public/js/layer/layer.js"></script> 
+<script src="/public/js/layer/layui.js"></script>
+
+<style>
+
+    .layui-btn{
+        margin-right: 30px;
+    }
+    .layui-form-checkbox{
+        margin-right:5px!important;
+        margin-top: -4px!important;
+    }
+</style>
+<body>
+
+
+<div class="right">
+	<div class="meau22">
+        <div class="xt_title">后台管理</div>
+        <div class="top-link">
+            <a href="#" target="mainCont" title="DeathGhost">
+                <i class="adminIcon"><img src="/public/images/user_01.png"></i><span><b>你好,{$uname}</b>欢迎使用管理系统</span></a>
+            <a href="/admin/login/logout" class="tuichu" title="退出"><img src="/public/images/tuichu.gif"></a>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div class="main1">
+		{include file="layer/top"}
+        <div class="clear"></div>
+
+
+        <div class="clear"></div>
+        <form action="" method="post">
+            <div class="biaoge layui-form">
+            	<table width="100%" border="1" cellspacing="0" cellpadding="0">
+            	<tr>
+            	    <td height="45" align="center" valign="middle">标题：</td>
+            	    <td height="45" align="center" valign="middle">
+            	    	<input type="hidden" name="id" value="{$articleInfo.id}">
+            	    	<input type="text" name="title" value="{$articleInfo.title}"  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+            	    </td>
+          	    </tr>
+                <tr>
+                    <td height="50" width="200" align="center" valign="middle">文章分类：</td>
+                    <td height="50" width="800" align="center" valign="middle">
+                    	<select name="cate_id" lay-verify="required">
+					        <option value=""></option>
+                            {foreach name="cateList" item="vo"}
+                                <option value="{$vo.id}" <?= $articleInfo['cate_id'] == $vo['id'] ? 'selected' : '' ?> >{$vo.cate_name}</option>
+                            {/foreach}
+					      </select>
+                    </td>
+                </tr>
+            	<tr>
+            	    <td height="45" align="center" valign="middle">排序号：</td>
+            	    <td height="45" align="center" valign="middle">
+            	    	<input type="number" name="order" value="{$articleInfo.order}" required  lay-verify="required" placeholder="请输入排序号" autocomplete="off" class="layui-input">
+            	    </td>
+          	    </tr>
+            	<tr>
+            	    <td height="45" align="center" valign="middle">作者：</td>
+            	    <td height="45" align="center" valign="middle">
+            	    	<input type="text" name="author" value="{$articleInfo.author}" placeholder="请输入作者" autocomplete="off" class="layui-input">
+            	    </td>
+          	    </tr>
+                <tr>
+                    <td height="50" width="200" align="center" valign="middle">是否加精：</td>
+                    <td height="50" width="800" align="center" valign="middle">
+                        <input type="hidden" name="sfjj" value="0">
+                        <input type="checkbox" value="1" name="sfjj" lay-filter="switchTest"  lay-text="是|否" lay-skin="switch" <?= $articleInfo['sfjj']=='on' ? "checked" : '' ?>>
+                    </td>
+                </tr>
+                <tr>
+                    <td height="50" width="200" align="center" valign="middle">文章内容：</td>
+                    <td height="50" width="800" align="center" valign="middle">
+                    	<textarea  rows="30" name="content" id="tar_content"  cols="70">{$articleInfo.content}</textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td height="50" width="200" align="center" valign="middle">是否启用：</td>
+                    <td height="50" width="800" align="center" valign="middle">
+                        <input type="hidden" name="status" value="0">
+                        <input type="checkbox" value="1" name="status" lay-filter="switchStatus"  lay-text="启用|禁用" lay-skin="switch" <?= $articleInfo['status']=='on' ? "checked" : '' ?>>
+                    </td>
+                </tr>
+          	  </table>
+               <button class="layui-btn" lay-submit lay-filter="formDemo">提交</button>
+               <button class="layui-btn" onclick="javascript:history.go(-1)" >返回</button>
+            </div>
+        </form>
+        <div class="clear"></div>
+        <div class="clear"></div>
+       
+    </div>
+    <div class="banquan">CopyRight 2014-2018  有限公司版权所有</div>
+</div>
+<script type="text/javascript" src="/public/ueditor/ueditor.config.admin.js"></script>
+<!-- 编辑器源码文件 -->
+<script type="text/javascript" src="/public/ueditor/ueditor.all.js"></script>
+<script type="text/javascript" src="/public/ueditor/lang/zh-cn/zh-cn.js"></script>
+<!-- 实例化编辑器 -->
+<script type="text/javascript">
+    var ue = UE.getEditor('tar_content', {
+        //这里可以选择自己需要的工具按钮名称,此处仅选择如下五个
+    	initialFrameWidth: '80%',
+    	initialFrameHeight: '400'
+    });
+</script>
+<script>
+//Demo
+    layui.use('form', function(){
+        var form = layui.form;
+
+        //监听指定开关
+        form.on('switch(switchTest)', function(data){
+            console.log(data.elem.checked); //开关是否开启，true或者false
+            if(data.elem.checked){
+                $(this).val('1');
+                console.log('1');
+            }else{
+                $(this).val('0');
+                console.log('0');
+            }
+        });
+        //监听指定开关
+        form.on('switch(switchStatus)', function(data){
+            console.log(data.elem.checked); //开关是否开启，true或者false
+            if(data.elem.checked){
+                $(this).val('1');
+                console.log('1');
+            }else{
+                $(this).val('0');
+                console.log('0');
+            }
+        });
+
+            //监听提交
+        form.on('submit(formDemo)', function(data){
+            /*data.field.is_kai = data.field.is_kai ? "on": "off";
+            layer.msg(JSON.stringify(data.field));*/
+            return true;
+        });
+    }); 
+</script>
+</body>
+</html>

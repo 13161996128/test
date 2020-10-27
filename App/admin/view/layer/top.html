@@ -1,0 +1,22 @@
+<?php $method=\think\Request::instance()->action(); ?>
+<div class="caidan3">
+	<ul>
+		<a href="/admin/index/index"><li class="<?php if($method=='index'){echo 'hover14';}?>">文章列表</li></a>
+		<a href="/admin/index/addArticle"><li class="<?php if($method=='add'){echo 'hover14';}?>">文章添加</li></a>
+		<a class="haimeizuo" href="#"><li class="<?php if($method=='cate_list'){echo 'hover14';}?>">文章分类</li></a>
+<!--		<a href="/admin/index/manage"><li class="<?php if($method=='manage'){echo 'hover14';}?>">获取文章</li></a>-->
+		<a href="/admin/index/bonus"><li class="<?php if($method=='bonus'){echo 'hover14';}?>">全局配置</li></a>
+		<a class="haimeizuo" href="#"><li class="<?php if($method=='log'){echo 'hover14';}?>">操作日志</li></a>
+		<a class="haimeizuo" href="#"><li class="<?php if($method=='fwrz'){echo 'hover14';}?>">访问日志</li></a>
+		<a class="haimeizuo" href="#"><li class="<?php if($method=='advert'){echo 'hover14';}?>">广告管理</li></a>
+		<a href="/admin/index/jingpin"><li class="<?php if($method=='jingpin'){echo 'hover14';}?>">精品文章</li></a>
+	</ul>
+</div>
+
+
+
+<script>
+	$(".haimeizuo").click(function () {
+		layer.msg("程序员太懒，还没做");
+	})
+</script>

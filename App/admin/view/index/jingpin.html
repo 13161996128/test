@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>后台-精品文章列表</title>
+</head>
+
+<link rel="stylesheet" href="/public/css/adminStyle.css"> 
+<link rel="stylesheet" type="text/css" href="/public/css/page.css"/>
+<link rel="stylesheet" type="text/css" href="/public/css/layui.css"/>
+<script type="text/javascript" src="/public/js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="/public/js/layer/layer.js"></script> 
+<script src="/public/js/layer/layui.js"></script>
+
+<style>
+    .layui-btn{
+        margin-right: 30px;
+    }
+    .layui-form-checkbox{
+        margin-right:5px!important;
+        margin-top: -4px!important;
+    }
+    .layui-form-select .layui-edge{
+        top:16px;
+    }
+    .layui-form-selected dl {
+        top: 32px;
+        bottom: auto;
+    }
+</style>
+<body>
+
+
+<div class="right">
+	<div class="meau22">
+    	<div class="xt_title">后台管理</div>
+        <div class="top-link">
+            <a href="#" target="mainCont" title="DeathGhost">
+                <i class="adminIcon"><img src="/public/images/user_01.png"></i><span><b>你好,{$uname}</b>欢迎使用管理系统</span></a>
+              <a href="/admin/login/logout" class="tuichu" title="退出"><img src="/public/images/tuichu.gif"></a>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div class="main1">
+		{include file="layer/top"}
+
+        <div class="clear"></div>
+
+        <div class="biaodan">
+
+        </div>
+
+
+        <div class="clear"></div>
+        <div class="biaoge layui-form">
+        	<table width="100%" border="1" cellspacing="0" cellpadding="0">
+        	<tr class="ddbg">
+        	    <td height="45" align="center" valign="middle"><input type="checkbox" id="all" name="" lay-filter="all" lay-skin="primary">ID</td>
+        	    <td height="45" align="center" valign="middle">文章标题</td>
+        	    <td height="45" align="center" valign="middle">操作</td>
+      	    </tr>
+			{foreach name="jingpinList" item="vo"}
+                <tr>
+                    <td height="50" width="80" align="center" valign="middle">
+                        {$vo.id}
+                    </td>
+                    <td height="50" align="center" valign="middle">{$vo.title}</td>
+                    <td height="50" align="center" valign="middle">
+                        <a href="/Index/index/getInfo?id={$vo.article_id}" target="_blank"><button class="layui-btn layui-btn-normal" >查看文章</button></a>
+                        <button class="layui-btn layui-btn-danger" onclick="del({$vo.id})" >删除</button>
+                    </td>
+                </tr>
+			{/foreach}
+      	  </table>
+        </div>
+        <div class="clear"></div>
+        <div class="bg_fenye">
+        <div style="float: left;">
+        	<?php if($count){ ?>
+		    共查询到 {$count} 条记录
+		    <?php } ?>
+		</div>
+        </div>
+        <div class="clear"></div>
+       
+    </div>
+    <div class="banquan">CopyRight 2014-2018  有限公司版权所有</div>
+</div>
+
+<script>
+    $(".haimeizuo").click(function () {
+        layer.msg("程序员太懒，还没做");
+    })
+
+</script>
+<script>
+    function del(id){
+        layer.confirm('确认删除这篇文章？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            $.ajax({
+                type: "POST",
+                url: "/Admin/index/deljingpinArticle",
+                data: {
+                    'id'    :id,
+                },
+                success: function(msg){
+                    if (msg.code==1) {
+                        layer.msg('已删除', {
+                            icon: 1,
+                            time: 600 //2秒关闭（如果不配置，默认是3秒）
+                        }, function(){
+                            location.reload();
+                        }); 
+                    }else{
+                        layer.msg("删除失败！",{
+                        icon: 2,
+                        time: 600 //2秒关闭（如果不配置，默认是3秒）
+                        })
+                    }
+                }
+            })
+        });
+    }
+    //Demo
+    layui.use('form', function(){
+        var form = layui.form;
+        //全选反选
+        form.on('checkbox(all)', function(data){  
+            var ch = document.getElementsByClassName("checkbox19871");  
+            var checked=$('#all').next().attr('class');
+
+            for (var i = 0; i < ch.length; i++) {  
+                if (data.elem.checked == true)  
+                    ch[i].checked = true;  
+                else  
+                    ch[i].checked = false;  
+            }  
+
+            var ch = document.getElementsByClassName("layui-unselect layui-form-checkbox");  
+
+            for (var i = 0; i < ch.length; i++) {  
+                if (checked == "layui-unselect layui-form-checkbox layui-form-checked") { 
+                    ch[i].className = "layui-unselect layui-form-checkbox layui-form-checked";  
+                }  
+                else {  
+                    ch[i].className = "layui-unselect layui-form-checkbox";  
+                }  
+  
+            }  
+  
+            return false;  
+        });    
+    });   
+</script>
+</body>
+</html>

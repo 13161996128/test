@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<!-- saved from url=(0035)http://www.r6d7.com/htm/novellist4/ -->
+<html lang="zh-CN"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0;" name="viewport">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <title>{$cateInfo.cate_name}</title>
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="applicable-device" content="pc,mobile">
+    <!--[if lt IE 9]><script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script><![endif]-->
+    <link href="/public/list/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="/public/list/swiper.min.css" rel="stylesheet" type="text/css">
+    <link href="/public/list/style.css" rel="stylesheet" type="text/css">
+    <link href="/public/list/white.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="/public/list/mm-content.css">
+    <link rel="stylesheet" type="text/css" href="/public/css/layui.css"/>
+    <script type="text/javascript" src="/public/js/layer/layer.js"></script>
+    <script src="/public/js/layer/layui.js"></script>
+    <script type="text/javascript" src="/public/js/jquery-1.7.2.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/public/list/showfloatdiv.css"></head>
+
+<link rel="stylesheet" type="text/css" href="/public/css/page.css"/>
+
+<body>
+
+{include file="layui/top"}
+
+<div class="container">
+    <div class="row">
+
+        <div class="col-md-91 col-sm-12 box-main-content">
+            <div class="layout-box clearfix" style="    min-height: 800px;">
+                <form action="" class="layui-form" method="post" style="position: relative;" id="searchform">
+                    <div class="bd layui-form" style="margin-top: 6px;">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">标题</label>
+                            <div class="layui-input-block">
+                                <input type="text" style="width: 68%" name="title" required  value="<?= !empty($title) ? $title : '';?>" lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <button class="layui-btn" style="position: absolute;right: 130px;top: 3px;" lay-submit lay-filter="formDemo">搜索</button>
+                        <input type="hidden" name="cate_id" value="{$cate_id}" >
+
+                    </div>
+                </form>
+                <div class="box-title">
+                    <h3 class="m-0">{$cateInfo.cate_name}</h3>
+                    <div class="more pull-right"><span class="text-muted pull-right">当前第<span class="text-color">“{$list->currentPage}”</span>页</span></div>
+                </div>
+               <ul class="box-topic-list p-0 clearfix">
+                    {foreach name="list" item="vo"}
+                    <li class="col-md-14 col-sm-16 col-xs-12 clearfix news-box"><a href="/Index/index/getInfo?id={$vo.id}" title="{$vo.title}" ><span class="xslist text-bg-c">{$vo.title}　<font color="#808080" style="float: right;
+    margin-right: 20px;"><?php echo date("Y-m-d",strtotime($vo['create_time'])); ?></font></span></a></li>
+                    {/foreach}
+
+                </ul>
+                <div class="box-page clearfix" id="long-page">
+
+                    {$page}
+                </div>
+            </div>
+        </div>
+    </div>
+    ﻿ </div>
+
+
+
+<script>
+
+    layui.use('form', function() {
+        var form = layui.form;
+    })
+
+</script>
+
+
+
+<div style="display:none"><script type="text/javascript" src="/public/list/z_stat.php"></script><script src="/public/list/core.php" charset="utf-8" type="text/javascript"></script><a href="https://www.cnzz.com/stat/website.php?web_id=1278012569" target="_blank" title="站长统计">站长统计</a></div>
+<div style="display:none"><script type="text/javascript" src="/public/list/z_stat(1).php"></script><script src="/public/list/core(1).php" charset="utf-8" type="text/javascript"></script><a href="https://www.cnzz.com/stat/website.php?web_id=1278919886" target="_blank" title="站长统计">站长统计</a></div>
+<ul class="slider-extra clearfix">
+    <li><a class="backtop" href="javascript:scroll(0,0)" style="display: block;"><i class="icon iconfont"></i></a></li>
+
+</ul>
+
+
+
+</body></html>

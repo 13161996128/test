@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>后台-全局配置</title>
+</head>
+
+<link rel="stylesheet" href="/public/css/adminStyle.css"> 
+<link rel="stylesheet" type="text/css" href="/public/css/page.css"/>
+<link rel="stylesheet" type="text/css" href="/public/css/layui.css"/>
+<script type="text/javascript" src="/public/js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="/public/js/layer/layer.js"></script> 
+<script src="/public/js/layer/layui.js"></script>
+
+<style>
+
+    .layui-btn{
+        margin-right: 30px;
+    }
+    .layui-form-checkbox{
+        margin-right:5px!important;
+        margin-top: -4px!important;
+    }
+</style>
+<body>
+
+
+<div class="right">
+	<div class="meau22">
+        <div class="xt_title">后台管理</div>
+        <div class="top-link">
+            <a href="#" target="mainCont" title="DeathGhost">
+                <i class="adminIcon"><img src="/public/images/user_01.png"></i><span><b>你好,{$uname}</b>欢迎使用管理系统</span></a>
+            <a href="/admin/login/logout" class="tuichu" title="退出"><img src="/public/images/tuichu.gif"></a>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div class="main1">
+		{include file="layer/top"}
+        <div class="clear"></div>
+
+
+        <div class="clear"></div>
+        <form action="" method="post">
+            <div class="biaoge layui-form">
+            	<table width="100%" border="1" cellspacing="0" cellpadding="0">
+            	<tr class="ddbg">
+            	    <td height="45" align="center" valign="middle">key</td>
+            	    <td height="45" align="center" valign="middle">value</td>
+          	    </tr>
+                <tr>
+                    <td height="50" width="200" align="center" valign="middle">
+                        是否开启网站
+                    </td>
+                    <td height="50" width="800" align="center" valign="middle">
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <input type="hidden" name="is_kai" value="off">
+                                <input type="checkbox" name="is_kai" lay-filter="switchTest"  <?= $bonus['v']=='on' ? "checked" : '' ?>  lay-text="开启|关闭" lay-skin="switch">
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                {foreach name="bonusList" item="vo"}
+                    <tr>
+                        <td height="50" width="200" align="center" valign="middle">
+                            {$vo.name}
+                        </td>
+
+                        <td height="50" width="800" align="center" valign="middle">
+                            <div class="layui-form-item">
+                                <div class="layui-input-block">
+                                  <input type="text" name="{$vo.k}" style="width: 800px" required  lay-verify="required" placeholder="请输入{$vo.name}" value="{$vo.v}" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                {/foreach}
+          	  </table>
+               <button class="layui-btn" lay-submit lay-filter="formDemo">提交</button>
+            </div>
+        </form>
+        <div class="clear"></div>
+        <div class="clear"></div>
+       
+    </div>
+    <div class="banquan">CopyRight 2014-2018  有限公司版权所有</div>
+</div>
+
+<script>
+//Demo
+    layui.use('form', function(){
+        var form = layui.form;
+
+        //监听指定开关
+        /*form.on('switch(switchTest)', function(data){
+            console.log(data.elem.checked); //开关是否开启，true或者false
+            if(data.elem.checked){
+                $(this).val('on');
+                console.log('on');
+            }else{
+                $(this).val('off');
+                console.log('off');
+            }
+        });*/
+
+            //监听提交
+        form.on('submit(formDemo)', function(data){
+            /*data.field.is_kai = data.field.is_kai ? "on": "off";
+            layer.msg(JSON.stringify(data.field));*/
+            return true;
+        });
+    });
+    function getALLByPage(){
+        //loading层
+        var index = layer.load(1, {
+          shade: [0.1,'#fff'] //0.1透明度的白色背景
+        });
+        var page_str  =     parseInt($("input[name=str]").val());
+        var page      =     parseInt($("input[name=page]").val());
+        $.ajax({
+           type: "POST",
+           url: "/Index/index/getALLByPage",
+           data: {
+                'page_str'      : page_str,
+                'page'          : page,
+           },
+            success: function(msg){
+                layer.close(index); 
+                if (msg.code==1) {
+                    $("input[name=str]").val(page_str+page)
+                    layer.alert("共插入"+msg.msg+"条数据");
+                }else if(msg.code==2){
+                    layer.alert("查询完成，没有数据了，共查询到"+(msg.msg-1)+"页");
+                }else{
+                    layer.msg("获取失败！",{
+                      icon: 2,
+                      time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                    })
+                }
+            }
+        }); 
+    }    
+</script>
+</body>
+</html>
